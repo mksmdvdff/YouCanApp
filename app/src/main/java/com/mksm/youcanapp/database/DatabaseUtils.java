@@ -7,6 +7,8 @@ import java.util.Calendar;
  */
 public class DatabaseUtils {
 
+    public static final String TAG = "DatabaseLog";
+
     /*
     YYYYMMDDHHMMSS - формат хранения числа.
      */
