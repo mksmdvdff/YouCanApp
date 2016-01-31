@@ -7,24 +7,30 @@ import java.util.Calendar;
  */
 public class Task {
 
-    int id;
+    long id;
     String text;
     State state;
     Calendar date;
 
-    public Task(int id, String text, Calendar date, State state) {
+    public Task(long id, String text, Calendar date, State state) {
         this.id = id;
         this.text = text;
         this.state = state;
         this.date = date;
-
     }
 
-    public int getId() {
+    public Task(String text, Calendar date) {
+        this.id = 0; //до сохранения в реляционке сделаем заглушку.
+        this.text = text;
+        this.date = date;
+        this.state = State.NOT_DONE;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -64,7 +70,7 @@ public class Task {
             this.id = id;
         }
 
-        String getId() {
+        public String getId() {
             return this.id;
         }
 

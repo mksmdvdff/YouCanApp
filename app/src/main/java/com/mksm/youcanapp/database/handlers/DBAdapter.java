@@ -1,4 +1,4 @@
-package com.mksm.youcanapp.database.adaters;
+package com.mksm.youcanapp.database.handlers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

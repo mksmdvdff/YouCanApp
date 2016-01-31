@@ -7,4 +7,5 @@ import java.util.Map;
  */
 public interface Handler {
     Map<String, String> getColumns();
+    String getTableName();
 }

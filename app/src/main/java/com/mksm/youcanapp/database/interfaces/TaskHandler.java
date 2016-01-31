@@ -9,7 +9,7 @@ import java.util.List;
  * Created by mskm on 24.01.2016.
  */
 public interface TaskHandler extends Handler {
-    Task getTaskById(String _id);
+    Task getTaskById(long _id);
     List<Task> getTasksByDate(Calendar date);
     void addNewTask (Task task);
     void addNewTasks (List<Task> tasks);
