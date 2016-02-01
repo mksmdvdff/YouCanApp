@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.mksm.youcanapp.database.DatabaseUtils;
+import com.mksm.youcanapp.database.interfaces.Handler;
 import com.mksm.youcanapp.database.interfaces.TaskHandler;
 import com.mksm.youcanapp.entities.Task;
 
@@ -39,7 +40,7 @@ public class TaskDatabaseHandler implements TaskHandler{
         columns.put(KEY_STATE, "TEXT");
     }
 
-    private DBAdapter mDbHelper;
+    private DatabaseAdapter mDbHelper;
     private SQLiteDatabase mDb;
 
     private final Context mCtx;
@@ -48,8 +49,15 @@ public class TaskDatabaseHandler implements TaskHandler{
         this.mCtx = mCtx;
     }
 
+    /*
+    For DB creating o
+     */
+    private TaskDatabaseHandler() {
+        this.mCtx = null;
+    }
+
     public TaskDatabaseHandler open() throws SQLException {
-        this.mDbHelper = new DBAdapter(this.mCtx);
+        this.mDbHelper = new DatabaseAdapter(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
         return this;
     }
@@ -112,8 +120,7 @@ public class TaskDatabaseHandler implements TaskHandler{
         content.put(KEY_STATE, task.getState().getId());
         content.put(KEY_DATE, DatabaseUtils.dateToLong(task.getDate()));
         long id = mDb.insert(TABLE_NAME, null, content);
-
-
+        task.setId(id);
 
     }
 
@@ -127,7 +134,8 @@ public class TaskDatabaseHandler implements TaskHandler{
             content.put(KEY_TEXT, task.getText());
             content.put(KEY_STATE, task.getState().getId());
             content.put(KEY_DATE, DatabaseUtils.dateToLong(task.getDate()));
-            mDb.insert(TABLE_NAME, null, content);
+            long id = mDb.insert(TABLE_NAME, null, content);
+            task.setId(id);
         }
     }
 
@@ -161,5 +169,9 @@ public class TaskDatabaseHandler implements TaskHandler{
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    public static Handler getInstanceForDBCreating() {
+        return new TaskDatabaseHandler();
     }
 }

@@ -10,8 +10,8 @@ import android.util.Log;
 import com.mksm.youcanapp.database.DatabaseUtils;
 import com.mksm.youcanapp.database.interfaces.AddictionDatesHandler;
 import com.mksm.youcanapp.database.interfaces.AddictionHandler;
+import com.mksm.youcanapp.database.interfaces.Handler;
 import com.mksm.youcanapp.entities.Addiction;
-import com.mksm.youcanapp.entities.Task;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,23 +42,40 @@ public class AddictionDatabaseHandler implements AddictionHandler {
         columns.put(KEY_DURATION, "INTEGER");
     }
 
-    private DBAdapter mDbHelper;
+    private DatabaseAdapter mDbHelper;
     private SQLiteDatabase mDb;
 
     private final Context mCtx;
+
+
 
     public AddictionDatabaseHandler(Context mCtx) {
         this.mCtx = mCtx;
     }
 
+    /*
+    For DB creating only
+     */
+    private AddictionDatabaseHandler() {
+        this.mCtx = null;
+    }
+
     public AddictionDatabaseHandler open() throws SQLException {
-        this.mDbHelper = new DBAdapter(this.mCtx);
+        this.mDbHelper = new DatabaseAdapter(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
         return this;
     }
 
     public void close() {
         this.mDbHelper.close();
+    }
+
+
+    public static List<Handler> getInstanceForDBCreating() {
+        List<Handler> result = new ArrayList<Handler>();
+        result.add(new AddictionDatesDatabaseHandler());
+        result.add(new AddictionDatabaseHandler());
+        return result;
     }
 
     @Override
@@ -80,6 +97,7 @@ public class AddictionDatabaseHandler implements AddictionHandler {
                 AddictionDatesDatabaseHandler adh = new AddictionDatesDatabaseHandler(this.mCtx);
                 adh.open();
                 List<Calendar> dates = adh.getDates(_id);
+                adh.close();
 
                 return new Addiction(_id, text, startDate, endDate, duration, dates);
 
@@ -108,6 +126,7 @@ public class AddictionDatabaseHandler implements AddictionHandler {
                     AddictionDatesDatabaseHandler adh = new AddictionDatesDatabaseHandler(this.mCtx);
                     adh.open();
                     List<Calendar> dates = adh.getDates(id);
+                    adh.close();
 
                     result.add(new Addiction(id,text,startDate,endDate,duration,dates));
                 }
@@ -124,26 +143,30 @@ public class AddictionDatabaseHandler implements AddictionHandler {
             return;
 
         ContentValues content = new ContentValues();
-        content.put(KEY_TEXT, task.getText());
-        content.put(KEY_STATE, task.getState().getId());
-        content.put(KEY_DATE, DatabaseUtils.dateToLong(task.getDate()));
+        content.put(KEY_TEXT, addiction.getText());
+        content.put(KEY_START_DATE, DatabaseUtils.dateToLong(addiction.getStartDate()));
+        content.put(KEY_END_DATE, DatabaseUtils.dateToLong(addiction.getEndDate()));
+        content.put(KEY_DURATION, addiction.getDuration());
         long id = mDb.insert(TABLE_NAME, null, content);
 
-
+        addiction.setId(id);
 
     }
 
     @Override
     public void addNewAddictions(List<Addiction> addictions) {
-        if (tasks==null || tasks.isEmpty())
+        if (addictions==null || addictions.isEmpty())
             return;
 
-        for (Task task : tasks) {
+        for (Addiction addiction : addictions) {
             ContentValues content = new ContentValues();
-            content.put(KEY_TEXT, task.getText());
-            content.put(KEY_STATE, task.getState().getId());
-            content.put(KEY_DATE, DatabaseUtils.dateToLong(task.getDate()));
-            mDb.insert(TABLE_NAME, null, content);
+            content.put(KEY_TEXT, addiction.getText());
+            content.put(KEY_START_DATE, DatabaseUtils.dateToLong(addiction.getStartDate()));
+            content.put(KEY_END_DATE, DatabaseUtils.dateToLong(addiction.getEndDate()));
+            content.put(KEY_DURATION, addiction.getDuration());
+            long id = mDb.insert(TABLE_NAME, null, content);
+
+            addiction.setId(id);
         }
     }
 
@@ -151,27 +174,36 @@ public class AddictionDatabaseHandler implements AddictionHandler {
     public void updateAddiction(Addiction addiction) {
 
         ContentValues content = new ContentValues();
-        content.put(KEY_TEXT, task.getText());
-        content.put(KEY_STATE, task.getState().getId());
-        content.put(KEY_DATE, DatabaseUtils.dateToLong(task.getDate()));
-        mDb.update(TABLE_NAME,content,"_id = ?", new String[]{String.valueOf(task.getId())});
+        content.put(KEY_TEXT, addiction.getText());
+        content.put(KEY_START_DATE, DatabaseUtils.dateToLong(addiction.getStartDate()));
+        content.put(KEY_END_DATE, DatabaseUtils.dateToLong(addiction.getEndDate()));
+        content.put(KEY_DURATION, addiction.getDuration());
+        mDb.update(TABLE_NAME,content,"_id = ?", new String[]{String.valueOf(addiction.getId())});
     }
 
     @Override
     public void addNewDate(Addiction addiction, Calendar date) {
-
+        AddictionDatesDatabaseHandler adh = new AddictionDatesDatabaseHandler(this.mCtx);
+        adh.open();
+        adh.addNewDate(addiction.getId(), date);
+        close();
     }
 
     @Override
     public void deleteAddiction(Addiction addiction) {
-        if (task == null)
+        if (addiction == null)
             return;
-        mDb.delete(TABLE_NAME,"_id = ?", new String[]{String.valueOf(task.getId())});
+        mDb.delete(TABLE_NAME,"_id = ?", new String[]{String.valueOf(addiction.getId())});
     }
 
     @Override
     public void deleteAll() {
         mDb.delete(TABLE_NAME, null, null);
+    }
+
+    @Override
+    public AddictionDatesHandler getDatesHandler() {
+        return new AddictionDatesDatabaseHandler(mCtx);
     }
 
     @Override
@@ -192,7 +224,7 @@ public class AddictionDatabaseHandler implements AddictionHandler {
 
         private static Map<String, String> columns;
 
-        private DBAdapter mDbHelper;
+        private DatabaseAdapter mDbHelper;
         private SQLiteDatabase mDb;
 
         private final Context mCtx;
@@ -207,14 +239,25 @@ public class AddictionDatabaseHandler implements AddictionHandler {
             this.mCtx = mCtx;
         }
 
+        /*
+        For DB creating only
+         */
+        private AddictionDatesDatabaseHandler() {
+            this.mCtx = null;
+        }
+
         public AddictionDatesHandler open() throws SQLException {
-            this.mDbHelper = new DBAdapter(this.mCtx);
+            this.mDbHelper = new DatabaseAdapter(this.mCtx);
             this.mDb = this.mDbHelper.getWritableDatabase();
             return this;
         }
 
         public void close() {
             this.mDbHelper.close();
+        }
+
+        public static Handler getInstanceForDBCreating() {
+            return new AddictionDatesDatabaseHandler();
         }
 
         @Override

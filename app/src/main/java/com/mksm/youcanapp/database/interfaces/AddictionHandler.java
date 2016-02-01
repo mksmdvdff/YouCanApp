@@ -22,4 +22,5 @@ public interface AddictionHandler extends Handler {
      */
     void deleteAddiction (Addiction addiction);
     void deleteAll();
+    AddictionDatesHandler getDatesHandler();
 }
