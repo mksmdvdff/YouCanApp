@@ -1,7 +1,7 @@
 package com.mksm.youcanapp.database.interfaces;
 
 
-import com.mksm.youcanapp.entities.Addiction;
+import com.mksm.youcanapp.entities.implementations.Addiction;
 
 import java.util.Calendar;
 import java.util.List;

@@ -11,7 +11,7 @@ import com.mksm.youcanapp.database.DatabaseUtils;
 import com.mksm.youcanapp.database.interfaces.AddictionDatesHandler;
 import com.mksm.youcanapp.database.interfaces.AddictionHandler;
 import com.mksm.youcanapp.database.interfaces.Handler;
-import com.mksm.youcanapp.entities.Addiction;
+import com.mksm.youcanapp.entities.implementations.Addiction;
 
 import java.util.ArrayList;
 import java.util.Calendar;

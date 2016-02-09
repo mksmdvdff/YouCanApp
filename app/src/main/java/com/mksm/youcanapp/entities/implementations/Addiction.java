@@ -1,4 +1,7 @@
-package com.mksm.youcanapp.entities;
+package com.mksm.youcanapp.entities.implementations;
+
+import com.mksm.youcanapp.entities.interfaces.Checkable;
+import com.mksm.youcanapp.session.YouCanSession;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,7 +10,7 @@ import java.util.List;
 /**
  * Created by mskm on 31.01.2016.
  */
-public class Addiction {
+public class Addiction implements Checkable {
 
     long id;
     String text;
@@ -43,6 +46,11 @@ public class Addiction {
 
     public String getText() {
         return text;
+    }
+
+    @Override
+    public boolean isChecked() {
+        return getDoneDates().contains(YouCanSession.get().getDate());
     }
 
     public void setText(String text) {
@@ -87,5 +95,15 @@ public class Addiction {
         Calendar endDate = (Calendar) startDate.clone();
         endDate.add(Calendar.DAY_OF_MONTH, duration);
         return endDate;
+    }
+
+    @Override
+    public void check() {
+        this.getDoneDates().add(YouCanSession.get().getDate());
+    }
+
+    @Override
+    public void uncheck() {
+        this.getDoneDates().remove(YouCanSession.get().getDate());
     }
 }

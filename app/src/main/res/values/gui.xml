@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_add_task">Новая задача</string>
+    <string name="main_add_addiction">Новая привычка</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="clear">Очистить</string>
+    <string name="make_report">Расписание на сегодня</string>
+</resources>

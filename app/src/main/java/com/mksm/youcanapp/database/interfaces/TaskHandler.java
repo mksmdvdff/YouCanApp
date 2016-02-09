@@ -1,6 +1,6 @@
 package com.mksm.youcanapp.database.interfaces;
 
-import com.mksm.youcanapp.entities.Task;
+import com.mksm.youcanapp.entities.implementations.Task;
 
 import java.util.Calendar;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by mskm on 24.01.2016.
  */
-public interface TaskHandler extends Handler {
+public interface TaskHandler extends Handler{
     Task getTaskById(long _id);
     List<Task> getTasksByDate(Calendar date);
     void addNewTask (Task task);

@@ -10,7 +10,7 @@ import android.util.Log;
 import com.mksm.youcanapp.database.DatabaseUtils;
 import com.mksm.youcanapp.database.interfaces.Handler;
 import com.mksm.youcanapp.database.interfaces.TaskHandler;
-import com.mksm.youcanapp.entities.Task;
+import com.mksm.youcanapp.entities.implementations.Task;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,11 +1,13 @@
-package com.mksm.youcanapp.entities;
+package com.mksm.youcanapp.entities.implementations;
+
+import com.mksm.youcanapp.entities.interfaces.Checkable;
 
 import java.util.Calendar;
 
 /**
  * Created by mskm on 24.01.2016.
  */
-public class Task {
+public class Task implements Checkable {
 
     long id;
     String text;
@@ -56,6 +58,21 @@ public class Task {
 
     public void setDate(Calendar date) {
         this.date = date;
+    }
+
+    @Override
+    public void check() {
+        this.state = State.DONE;
+    }
+
+    @Override
+    public void uncheck() {
+        this.state = State.NOT_DONE;
+    }
+
+    @Override
+    public boolean isChecked() {
+        return this.getState() == State.DONE;
     }
 
     public enum State {
