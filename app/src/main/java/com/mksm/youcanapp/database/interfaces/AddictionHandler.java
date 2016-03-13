@@ -11,16 +11,6 @@ import java.util.List;
  */
 public interface AddictionHandler extends Handler {
 
-    Addiction getAddictionById(long _id);
-    List<Addiction> getAddictionsByDate(Calendar date);
-    void addNewAddiction (Addiction addiction);
-    void addNewAddictions (List<Addiction> addictions);
-    void updateAddiction (Addiction addiction);
-    void addNewDate (Addiction addiction, Calendar date);
-    /*
-    * Marked "DONE" task mustn't be deleted, just change it status
-     */
-    void deleteAddiction (Addiction addiction);
-    void deleteAll();
-    AddictionDatesHandler getDatesHandler();
+    public void addNewDates(Addiction addiction, List<Calendar> dates);
+
 }

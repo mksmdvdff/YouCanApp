@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.mksm.youcanapp.R;
+import com.mksm.youcanapp.database.handlers.AddictionDatabaseHandler;
+import com.mksm.youcanapp.database.handlers.TaskDatabaseHandler;
+import com.mksm.youcanapp.entities.implementations.Addiction;
+import com.mksm.youcanapp.entities.implementations.Task;
 import com.mksm.youcanapp.session.YouCanSession;
 
 import java.util.Calendar;
@@ -23,6 +27,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        onlyTest();
+    }
+
+    private void onlyTest() {
+        TaskDatabaseHandler tdh = new TaskDatabaseHandler(this);
+        Task task1 = new Task("1", Calendar.getInstance());
+        Task task2 = new Task("2", Calendar.getInstance());
+        tdh.addNewTask(task1);
+        tdh.addNewTask(task2);
+        Calendar startDate = Calendar.getInstance();
+        startDate.add(Calendar.DAY_OF_MONTH, -5);
+        Addiction add1 = new Addiction("1", startDate, 45);
+        Addiction add2 = new Addiction("2", startDate, 45);
+        AddictionDatabaseHandler adh = new AddictionDatabaseHandler(this);
+        adh.addNewAddiction(add1);
+        adh.addNewAddiction(add2);
+        tdh.getAll();
     }
 
     private void init() {
@@ -47,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(addIntent);
                 break;
             case R.id.main_get_tasks :
-                Intent getDayIntent = new Intent(this, AddAddictionActivity.class);
+                Intent getDayIntent = new Intent(this, DayReportActivity.class);
                 startActivity(getDayIntent);
                 break;
             default:

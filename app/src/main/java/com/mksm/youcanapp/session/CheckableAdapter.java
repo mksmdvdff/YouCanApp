@@ -39,9 +39,9 @@ public class CheckableAdapter extends ArrayAdapter<Checkable> {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int position = (Integer) buttonView.getTag();
                     if (isChecked)
-                        listOfCheckable.get(position).check();
+                        listOfCheckable.get(position).markChecked();
                     else
-                        listOfCheckable.get(position).uncheck();
+                        listOfCheckable.get(position).markUnchecked();
                 }
             });
             convertView.setTag(checkbox);

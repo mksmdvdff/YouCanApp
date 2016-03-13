@@ -1,5 +1,8 @@
 package com.mksm.youcanapp.entities.implementations;
 
+import com.mksm.youcanapp.database.DatabaseUtils;
+import com.mksm.youcanapp.database.handlers.AddictionDatabaseHandler;
+import com.mksm.youcanapp.database.interfaces.Handler;
 import com.mksm.youcanapp.entities.interfaces.Checkable;
 import com.mksm.youcanapp.session.YouCanSession;
 
@@ -18,6 +21,7 @@ public class Addiction implements Checkable {
     Calendar endDate;
     int duration;
     List<Calendar> doneDates;
+    Handler handler;
 
     public Addiction(long id, String text, Calendar startDate, Calendar endDate, int duration, List<Calendar> doneDates) {
         this.id = id;
@@ -26,10 +30,11 @@ public class Addiction implements Checkable {
         this.endDate = endDate;
         this.duration = duration;
         this.doneDates = doneDates;
+        this.handler = new AddictionDatabaseHandler();
     }
 
     public Addiction(String text, Calendar startDate, int duration) {
-        this.id = 0; //до сохранения в реляционке сделаем заглушку.
+        this.id = DatabaseUtils.WASNT_SAVE_IN_DB; //до сохранения в реляционке сделаем заглушку.
         this.text = text;
         this.startDate = startDate;
         this.duration = duration;
@@ -53,16 +58,27 @@ public class Addiction implements Checkable {
         return getDoneDates().contains(YouCanSession.get().getDate());
     }
 
+    @Override
+    public Handler getHandler() {
+        return null;
+    }
+
+    @Override
+    public void save() {
+        handler.save(this);
+    }
+
+    @Override
+    public void delete() {
+        handler.delete(this);
+    }
+
     public void setText(String text) {
         this.text = text;
     }
 
     public Calendar getStartDate() {
         return startDate;
-    }
-
-    public void setStartDate(Calendar startDate) {
-        this.startDate = startDate;
     }
 
     public Calendar getEndDate() {
@@ -87,10 +103,6 @@ public class Addiction implements Checkable {
         return doneDates;
     }
 
-    public void setDoneDates(List<Calendar> doneDates) {
-        this.doneDates = doneDates;
-    }
-
     private Calendar getEndDate (Calendar startDate, int duration) {
         Calendar endDate = (Calendar) startDate.clone();
         endDate.add(Calendar.DAY_OF_MONTH, duration);
@@ -98,12 +110,12 @@ public class Addiction implements Checkable {
     }
 
     @Override
-    public void check() {
+    public void markChecked() {
         this.getDoneDates().add(YouCanSession.get().getDate());
     }
 
     @Override
-    public void uncheck() {
+    public void markUnchecked() {
         this.getDoneDates().remove(YouCanSession.get().getDate());
     }
 }

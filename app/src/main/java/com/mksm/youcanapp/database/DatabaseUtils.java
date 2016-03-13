@@ -1,5 +1,8 @@
 package com.mksm.youcanapp.database;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.Calendar;
 
 /**
@@ -8,13 +11,14 @@ import java.util.Calendar;
 public class DatabaseUtils {
 
     public static final String TAG = "DatabaseLog";
+    public static final int WASNT_SAVE_IN_DB = -1000;
 
     /*
     YYYYMMDDHHMMSS - формат хранения числа.
      */
-    public static Long dateTimeToLong (Calendar date) {
+    public static long dateTimeToLong (Calendar date) {
         if (date == null) {
-            return null;
+            return 0;
         }
         StringBuilder sb = new StringBuilder();
         sb.append(date.get(Calendar.YEAR));
@@ -52,15 +56,15 @@ public class DatabaseUtils {
         else  return dateString;
     }
 
-    public static Long dateToLong (Calendar date) {
+    public static long dateToLong (Calendar date) {
         if (date == null) {
-            return null;
+            return 0;
         }
         StringBuilder sb = new StringBuilder();
         sb.append(date.get(Calendar.YEAR));
         sb.append(getDoubleNumberDate(date.get(Calendar.MONTH) + 1)); //0-based month
         sb.append(getDoubleNumberDate(date.get(Calendar.DAY_OF_MONTH)));
-        return Long.getLong(sb.toString());
+        return Long.parseLong(sb.toString());
     }
 
     public static Calendar longToDate (long value) {

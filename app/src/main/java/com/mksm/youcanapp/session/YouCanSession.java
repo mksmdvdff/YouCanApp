@@ -18,11 +18,10 @@ public class YouCanSession {
         return currSession;
     }
 
-    public static YouCanSession initNewSession(Calendar curDate){
-        if (curDate == null)
-            return null;
+    public static void initNewSession(Calendar curDate){
+        if (curDate == null || currSession != null)
+            return;
         currSession = new YouCanSession(curDate);
-        return currSession;
     }
 
     public Calendar getDate() {

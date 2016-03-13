@@ -61,12 +61,12 @@ public class Task implements Checkable {
     }
 
     @Override
-    public void check() {
+    public void markChecked() {
         this.state = State.DONE;
     }
 
     @Override
-    public void uncheck() {
+    public void markUnchecked() {
         this.state = State.NOT_DONE;
     }
 
