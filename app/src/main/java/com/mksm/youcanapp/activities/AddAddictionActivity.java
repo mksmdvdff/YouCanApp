@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mksm.youcanapp.R;
 
@@ -41,10 +42,12 @@ public class AddAddictionActivity extends RoboActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case (R.id.addiction_save_button):
-                String text = addictionText.getText().toString();
-                String date = addictionStartDate.getText().toString();
-                String duration = addictionDuration.getText().toString();
-                presenter.saveAddiction(text, date, duration);
+                if (checkFields()) {
+                    String text = addictionText.getText().toString();
+                    String date = addictionStartDate.getText().toString();
+                    String duration = addictionDuration.getText().toString();
+                    presenter.saveAddiction(text, date, duration);
+                }
                 break;
             case (R.id.addiction_clear_button) :
                 addictionText.getText().clear();
@@ -56,5 +59,8 @@ public class AddAddictionActivity extends RoboActivity implements View.OnClickLi
 
     }
 
-
+    private boolean checkFields() {
+        return !addictionText.getText().toString().isEmpty() && !addictionStartDate.getText().toString().isEmpty()
+                && !addictionDuration.getText().toString().isEmpty();
+    }
 }

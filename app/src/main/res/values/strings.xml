@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">YouCanApp</string>
+    <string name="addAddFieldsAreEmpty">Не все поля были заполнены</string>
 </resources>
